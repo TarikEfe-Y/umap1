@@ -24,15 +24,9 @@
     <div id="map"></div>
 
     <script>
-        // Firebase yapılandırma
+        // Sadece gerekli Firebase yapılandırması (databaseURL)
         const firebaseConfig = {
-            apiKey: "AIzaSyC35m5nbt3el3FNfKdwCBGm9Sgq_jPg0eQ",
-            authDomain: "navigasyon-ffc0c.firebaseapp.com",
-            databaseURL: "https://navigasyon-ffc0c-default-rtdb.firebaseio.com",
-            projectId: "navigasyon-ffc0c",
-            storageBucket: "navigasyon-ffc0c.appspot.com",
-            messagingSenderId: "361693401199",
-            appId: "1:361693401199:web:57acf604aa2458f4e13d9a"
+            databaseURL: "https://navigasyon-ffc0c-default-rtdb.firebaseio.com"
         };
 
         // Firebase başlat
@@ -50,13 +44,15 @@
             database.ref("markers").on("value", (snapshot) => {
                 snapshot.forEach((childSnapshot) => {
                     let data = childSnapshot.val();
-                    let lat = data.lat;
-                    let lon = data.lon;
+                    let latitude = data.latitude;
+                    let longitude = data.longitude;
                     let type = data.type || "Bilinmeyen"; // Firebase'de varsa tipi al
 
-                    // Haritaya marker ekle
-                    L.marker([lat, lon]).addTo(map)
-                        .bindPopup(`<b>Tür: ${type}</b><br>Koordinatlar: ${lat}, ${lon}`);
+                    // Eğer enlem ve boylam varsa haritaya ekle
+                    if (latitude && longitude) {
+                        L.marker([latitude, longitude]).addTo(map)
+                            .bindPopup(`<b>Tür: ${type}</b><br>Koordinatlar: ${latitude}, ${longitude}`);
+                    }
                 });
             });
         }
